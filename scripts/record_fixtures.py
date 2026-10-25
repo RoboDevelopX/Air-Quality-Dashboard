@@ -25,8 +25,13 @@ from aqd.providers.open_meteo import (
 from aqd.providers.openaq import BASE_URL as OPENAQ_URL
 
 FIXTURES = Path(__file__).resolve().parents[1] / "tests" / "fixtures"
-DELHI = {"latitude": 28.6519, "longitude": 77.2315}
-COMMON = {"timezone": "GMT", "timeformat": "unixtime", "past_days": 2, "forecast_days": 2}
+DELHI: dict[str, Any] = {"latitude": 28.6519, "longitude": 77.2315}
+COMMON: dict[str, Any] = {
+    "timezone": "GMT",
+    "timeformat": "unixtime",
+    "past_days": 2,
+    "forecast_days": 2,
+}
 
 
 def save(name: str, resp: httpx.Response) -> Any:
@@ -42,15 +47,25 @@ def main() -> int:
     args = parser.parse_args()
     FIXTURES.mkdir(parents=True, exist_ok=True)
     with httpx.Client(timeout=30) as client:
-        aq = {**DELHI, **COMMON, "hourly": ",".join(AQ_VARIABLES), "domains": "cams_global"}
+        aq: dict[str, Any] = {
+            **DELHI,
+            **COMMON,
+            "hourly": ",".join(AQ_VARIABLES),
+            "domains": "cams_global",
+        }
         save("open_meteo_air_quality.json", client.get(AIR_QUALITY_URL, params=aq))
-        weather = {**DELHI, **COMMON, "hourly": ",".join(WEATHER_COLUMNS), "wind_speed_unit": "ms"}
+        weather: dict[str, Any] = {
+            **DELHI,
+            **COMMON,
+            "hourly": ",".join(WEATHER_COLUMNS),
+            "wind_speed_unit": "ms",
+        }
         save("open_meteo_weather.json", client.get(FORECAST_URL, params=weather))
-        geo = {"name": "Delhi", "count": 2, "language": "en"}
+        geo: dict[str, Any] = {"name": "Delhi", "count": 2, "language": "en"}
         save("open_meteo_geocoding.json", client.get(GEOCODING_URL, params=geo))
-        empty = {"name": "Qxzqxzqxz", "count": 2, "language": "en"}
+        empty: dict[str, Any] = {"name": "Qxzqxzqxz", "count": 2, "language": "en"}
         save("open_meteo_geocoding_empty.json", client.get(GEOCODING_URL, params=empty))
-        bad = {**DELHI, "hourly": "pm25"}
+        bad: dict[str, Any] = {**DELHI, "hourly": "pm25"}
         save("open_meteo_error_400.json", client.get(AIR_QUALITY_URL, params=bad))
 
         if args.openaq:
@@ -59,7 +74,11 @@ def main() -> int:
                 print("OPENAQ_API_KEY is not set", file=sys.stderr)
                 return 1
             headers = {"X-API-Key": key}
-            params = {"coordinates": "28.6519,77.2315", "radius": 25000, "limit": 50}
+            params: dict[str, Any] = {
+                "coordinates": "28.6519,77.2315",
+                "radius": 25000,
+                "limit": 50,
+            }
             locs = save(
                 "openaq_locations.json",
                 client.get(f"{OPENAQ_URL}/locations", params=params, headers=headers),

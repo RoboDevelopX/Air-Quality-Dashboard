@@ -66,7 +66,7 @@ ignore = ["RUF001", "RUF002", "RUF003"]  # allow µ, ³, ° etc. in strings/comm
 python_version = "3.11"
 strict = true
 mypy_path = "src"
-packages = ["aqd"]
+files = ["src/aqd", "scripts"]
 warn_unreachable = true
 
 [[tool.mypy.overrides]]

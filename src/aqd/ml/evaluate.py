@@ -123,15 +123,15 @@ def _safe_mae(frame: pd.DataFrame, col: str) -> float:
     return round(mae(p["y"].to_numpy(), p[col].to_numpy()), 3) if len(p) else float("nan")
 
 
-def compare_with_provider(
+def align_provider_rows(
     snapshots: pd.DataFrame, actual: pd.Series, model_predictions: pd.DataFrame
 ) -> pd.DataFrame:
-    """MAE of the provider's own forecast vs ours, on the same issue times and horizons.
+    """Join provider and model forecasts for the same issue/valid times with the actuals.
 
     `snapshots`: provider forecasts as issued, columns issued_at, valid_time, pm2_5.
     `model_predictions`: our forecasts made with data up to issued_at, same columns.
     `actual`: PM2.5 later recorded for each valid_time (UTC index).
-    Only rows where both forecasts and the actual value exist are scored.
+    Keeps only rows where both forecasts and the actual value exist.
     """
     keys = ["issued_at", "valid_time"]
     merged = snapshots[[*keys, "pm2_5"]].merge(
@@ -141,12 +141,23 @@ def compare_with_provider(
     merged = merged.dropna(subset=["y", "pm2_5_provider", "pm2_5_model"])
     lead = pd.to_datetime(merged["valid_time"]) - pd.to_datetime(merged["issued_at"])
     merged["horizon"] = (lead.dt.total_seconds() // 3600).astype(int)
-    merged = merged[merged["horizon"] >= 1]
+    return merged[merged["horizon"] >= 1].reset_index(drop=True)
+
+
+def score_provider_rows(rows: pd.DataFrame, *, by: str | None = "bucket") -> pd.DataFrame:
     return score_table(
-        merged,
+        rows,
         {"provider (CAMS)": "pm2_5_provider", "LightGBM": "pm2_5_model"},
         baseline="provider (CAMS)",
+        by=by,
     )
+
+
+def compare_with_provider(
+    snapshots: pd.DataFrame, actual: pd.Series, model_predictions: pd.DataFrame
+) -> pd.DataFrame:
+    """MAE of the provider's own forecast vs ours, on the same issue times and horizons."""
+    return score_provider_rows(align_provider_rows(snapshots, actual, model_predictions))
 
 
 def plot_predictions(result: CvResult, city: str, horizon: int, path: Path) -> None:

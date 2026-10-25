@@ -1,0 +1,31 @@
+# Records the provider's PM2.5 forecast twice a day (shortly after the CAMS 00/12 UTC runs
+# appear) so the model can later be compared with it on held-out data.
+# Disable it in the Actions tab if you don't want these commits.
+name: Snapshot provider forecasts
+
+on:
+  schedule:
+    - cron: "40 3,15 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  snapshot:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+      - run: pip install -e .
+      - run: python scripts/snapshot_forecasts.py
+      - name: Commit snapshot
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add snapshots/
+          git commit -m "Snapshot provider forecasts" || echo "nothing to commit"
+          git push
