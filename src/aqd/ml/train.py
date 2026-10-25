@@ -144,6 +144,7 @@ def write_reports(
         "all_rows": cv.scores(),
         "sarimax_subset": cv.scores_with_sarimax(),
         "by_city": cv.scores_by_city(),
+        "by_horizon": cv.scores(by="horizon"),
     }
     (report_dir / "metrics.json").write_text(
         json.dumps(

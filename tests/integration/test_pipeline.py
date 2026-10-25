@@ -1,5 +1,6 @@
 """End to end with a mocked provider: fetch -> train/evaluate -> save -> load -> dashboard."""
 
+import json
 from datetime import date
 from pathlib import Path
 
@@ -48,6 +49,9 @@ def test_pipeline_end_to_end(tmp_path: Path) -> None:
     results = (tmp_path / "reports" / "results.md").read_text()
     assert "LightGBM" in results and "SARIMAX" in results
     assert (tmp_path / "reports" / "error_by_horizon.png").is_file()
+    metrics = json.loads((tmp_path / "reports" / "metrics.json").read_text())
+    horizons = {r["group"] for r in metrics["by_horizon"]} - {"all"}
+    assert {int(h) for h in horizons} == set(range(1, 49))
     overall = report.summary["cv"]["buckets"]["all"]
     assert overall["skill_vs_persistence"] > 0
     assert 0 < report.summary["cv"]["interval_coverage_80"] <= 1
