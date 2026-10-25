@@ -75,7 +75,10 @@ def main() -> int:
     settings = Settings.from_env()
     configure_logging(settings.log_level, "text")
     end = args.end or (datetime.now(UTC).date() - timedelta(days=2))
-    http = HttpClient(SqliteCache(ROOT / "data" / "http_cache.sqlite3"), timeout_s=120)
+    # Long, one-off requests: be patient with Open-Meteo's rate limiting and dropped connections.
+    http = HttpClient(
+        SqliteCache(ROOT / "data" / "http_cache.sqlite3"), timeout_s=120, retries=5, backoff_s=2.0
+    )
 
     cities = load_cities(args.cities, args.start, end, http)
     config = TrainConfig(
