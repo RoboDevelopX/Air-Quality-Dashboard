@@ -34,11 +34,13 @@ def http(tmp_path: Path, clock: FakeClock) -> HttpClient:
 
 @respx.mock
 def test_air_quality_parses_and_splits_history_forecast(
-    http: HttpClient, fixture: Callable[[str], Any]
+    http: HttpClient, clock: FakeClock, fixture: Callable[[str], Any]
 ) -> None:
-    route = respx.get(AIR_QUALITY_URL).mock(
-        return_value=httpx.Response(200, json=fixture("open_meteo_air_quality.json"))
-    )
+    payload = fixture("open_meteo_air_quality.json")
+    payload["hourly"]["pm2_5"][5] = None  # the recorded day has no gaps; real ones do
+    # Recorded 2026-10-25 with past_days=2: the first hour is 2026-10-23T00:00Z.
+    clock.now = payload["hourly"]["time"][0] + 60 * 3600  # 2026-10-25T12:00Z
+    route = respx.get(AIR_QUALITY_URL).mock(return_value=httpx.Response(200, json=payload))
     provider = OpenMeteoAirQuality(http)
     assert isinstance(provider, Provider)
     data = provider.air_quality(DELHI, past_days=2, forecast_days=2)
@@ -58,9 +60,9 @@ def test_air_quality_parses_and_splits_history_forecast(
 
     assert list(data.history.columns) == list(POLLUTANT_COLUMNS)
     assert str(data.history.index.tz) == "UTC"
-    # The fake clock is 2025-01-15T12:00Z: history ends there, forecast starts an hour later.
-    assert data.history.index.max() == pd.Timestamp("2025-01-15T12:00Z")
-    assert data.forecast.index.min() == pd.Timestamp("2025-01-15T13:00Z")
+    # History ends at the clock's hour, forecast starts an hour later.
+    assert data.history.index.max() == pd.Timestamp("2026-10-25T12:00Z")
+    assert data.forecast.index.min() == pd.Timestamp("2026-10-25T13:00Z")
     assert len(data.history) + len(data.forecast) == 96
     assert pd.isna(data.history["pm2_5"].iloc[5])  # null in the payload stays missing
     assert data.source == "open_meteo"
@@ -138,13 +140,19 @@ def test_geocoder_parses_results(http: HttpClient, fixture: Callable[[str], Any]
         return_value=httpx.Response(200, json=fixture("open_meteo_geocoding.json"))
     )
     results = OpenMeteoGeocoder(http).search(" Delhi ", count=2)
-    assert [r.name for r in results] == ["Delhi", "New Delhi"]
+    assert [r.name for r in results] == ["Delhi", "Delhi"]
     delhi = results[0]
     assert delhi.timezone == "Asia/Kolkata"
     assert delhi.country_code == "IN"
-    assert delhi.label == "Delhi, India"  # admin1 equal to name is not repeated
-    assert results[1].label == "New Delhi, Delhi, India"
+    assert delhi.population == 11034555
+    assert delhi.label == "Delhi, National Capital Territory of Delhi, India"
     assert delhi.key == "28.652,77.231"
+    assert results[1].label == "Delhi, New York, United States"
+    assert results[1].timezone == "America/New_York"
+
+
+def test_location_label_skips_admin1_equal_to_name() -> None:
+    assert Location("Delhi", 0, 0, admin1="Delhi", country="India").label == "Delhi, India"
 
 
 @respx.mock

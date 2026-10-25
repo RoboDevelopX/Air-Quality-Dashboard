@@ -1,1 +1,4 @@
-{"error": true, "reason": "Cannot initialize SurfaceVariable from invalid String value pm25 for key hourly"}
+{
+ "error": true,
+ "reason": "Invalid value: Cannot initialize SurfacePressureAndHeightVariable<VariableAndPreviousDay, VariableOrSpread<ForecastPressureVariable>, ForecastHeightVariable> from invalid String value pm25"
+}

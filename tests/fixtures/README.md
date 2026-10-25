@@ -2,6 +2,10 @@
 
 Raw API response bodies used by the provider tests (via respx). Tests never call the network.
 
+The Open-Meteo fixtures were recorded from the live APIs on 2026-10-25 (Delhi, hours from
+2026-10-23T00:00Z). The OpenAQ fixtures are still hand-written from the v3 docs because no
+API key was used; re-record them with `--openaq` once you have one.
+
 Re-record from the live APIs with:
 
 ```bash

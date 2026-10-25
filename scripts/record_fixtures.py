@@ -46,7 +46,9 @@ def main() -> int:
     parser.add_argument("--openaq", action="store_true", help="also record OpenAQ fixtures")
     args = parser.parse_args()
     FIXTURES.mkdir(parents=True, exist_ok=True)
-    with httpx.Client(timeout=30) as client:
+    # Transport retries cover dropped TLS handshakes, which Open-Meteo answers with under load.
+    transport = httpx.HTTPTransport(retries=5)
+    with httpx.Client(timeout=30, transport=transport) as client:
         aq: dict[str, Any] = {
             **DELHI,
             **COMMON,
