@@ -1,0 +1,1723 @@
+{
+  "summary": {
+    "trained_at": "2026-10-25T09:15:24+00:00",
+    "lightgbm_version": "4.7.0",
+    "cities": [
+      "Beijing",
+      "Cairo",
+      "Delhi",
+      "Jakarta",
+      "Lagos",
+      "Lahore",
+      "London",
+      "Los Angeles",
+      "Mumbai",
+      "S\u00e3o Paulo"
+    ],
+    "data_start": "2022-08-01 00:00:00+00:00",
+    "data_end": "2026-10-23 23:00:00+00:00",
+    "train_rows": 1112919,
+    "cv": {
+      "n_folds": 6,
+      "test_days": 30,
+      "gap_hours": 48,
+      "test_start": "2026-04-26 19:00:00+00:00",
+      "test_end": "2026-10-23 19:00:00+00:00",
+      "interval_coverage_80": 0.818,
+      "buckets": {
+        "1-6h": {
+          "mae": 6.609,
+          "rmse": 11.926,
+          "skill_vs_persistence": 0.352
+        },
+        "25-48h": {
+          "mae": 11.214,
+          "rmse": 19.178,
+          "skill_vs_persistence": 0.405
+        },
+        "7-24h": {
+          "mae": 10.149,
+          "rmse": 17.486,
+          "skill_vs_persistence": 0.428
+        },
+        "all": {
+          "mae": 10.236,
+          "rmse": 17.78,
+          "skill_vs_persistence": 0.41
+        }
+      }
+    }
+  },
+  "all_rows": [
+    {
+      "group": "1-6h",
+      "model": "persistence",
+      "n": 43190,
+      "mae": 10.1966,
+      "rmse": 19.2488,
+      "skill_vs_persistence": 0.0
+    },
+    {
+      "group": "1-6h",
+      "model": "seasonal naive",
+      "n": 43190,
+      "mae": 13.1423,
+      "rmse": 22.368,
+      "skill_vs_persistence": -0.2889
+    },
+    {
+      "group": "1-6h",
+      "model": "LightGBM",
+      "n": 43190,
+      "mae": 6.6087,
+      "rmse": 11.9264,
+      "skill_vs_persistence": 0.3519
+    },
+    {
+      "group": "25-48h",
+      "model": "persistence",
+      "n": 171440,
+      "mae": 18.8464,
+      "rmse": 31.1358,
+      "skill_vs_persistence": 0.0
+    },
+    {
+      "group": "25-48h",
+      "model": "seasonal naive",
+      "n": 171440,
+      "mae": 15.2024,
+      "rmse": 25.3201,
+      "skill_vs_persistence": 0.1934
+    },
+    {
+      "group": "25-48h",
+      "model": "LightGBM",
+      "n": 171440,
+      "mae": 11.2144,
+      "rmse": 19.1779,
+      "skill_vs_persistence": 0.405
+    },
+    {
+      "group": "7-24h",
+      "model": "persistence",
+      "n": 129210,
+      "mae": 17.7343,
+      "rmse": 29.8319,
+      "skill_vs_persistence": 0.0
+    },
+    {
+      "group": "7-24h",
+      "model": "seasonal naive",
+      "n": 129210,
+      "mae": 13.1514,
+      "rmse": 22.3863,
+      "skill_vs_persistence": 0.2584
+    },
+    {
+      "group": "7-24h",
+      "model": "LightGBM",
+      "n": 129210,
+      "mae": 10.149,
+      "rmse": 17.4856,
+      "skill_vs_persistence": 0.4277
+    },
+    {
+      "group": "all",
+      "model": "persistence",
+      "n": 343840,
+      "mae": 17.342,
+      "rmse": 29.3996,
+      "skill_vs_persistence": 0.0
+    },
+    {
+      "group": "all",
+      "model": "seasonal naive",
+      "n": 343840,
+      "mae": 14.1729,
+      "rmse": 23.892,
+      "skill_vs_persistence": 0.1827
+    },
+    {
+      "group": "all",
+      "model": "LightGBM",
+      "n": 343840,
+      "mae": 10.2355,
+      "rmse": 17.7804,
+      "skill_vs_persistence": 0.4098
+    }
+  ],
+  "sarimax_subset": [
+    {
+      "group": "1-6h",
+      "model": "persistence",
+      "n": 10800,
+      "mae": 12.6729,
+      "rmse": 23.968,
+      "skill_vs_persistence": 0.0
+    },
+    {
+      "group": "1-6h",
+      "model": "seasonal naive",
+      "n": 10800,
+      "mae": 12.1969,
+      "rmse": 20.1692,
+      "skill_vs_persistence": 0.0376
+    },
+    {
+      "group": "1-6h",
+      "model": "SARIMAX",
+      "n": 10800,
+      "mae": 7.2779,
+      "rmse": 12.8668,
+      "skill_vs_persistence": 0.4257
+    },
+    {
+      "group": "1-6h",
+      "model": "LightGBM",
+      "n": 10800,
+      "mae": 5.8556,
+      "rmse": 10.6284,
+      "skill_vs_persistence": 0.5379
+    },
+    {
+      "group": "25-48h",
+      "model": "persistence",
+      "n": 42950,
+      "mae": 19.0845,
+      "rmse": 30.1433,
+      "skill_vs_persistence": 0.0
+    },
+    {
+      "group": "25-48h",
+      "model": "seasonal naive",
+      "n": 42950,
+      "mae": 15.1985,
+      "rmse": 25.3072,
+      "skill_vs_persistence": 0.2036
+    },
+    {
+      "group": "25-48h",
+      "model": "SARIMAX",
+      "n": 42950,
+      "mae": 13.0241,
+      "rmse": 21.8429,
+      "skill_vs_persistence": 0.3176
+    },
+    {
+      "group": "25-48h",
+      "model": "LightGBM",
+      "n": 42950,
+      "mae": 11.172,
+      "rmse": 19.2467,
+      "skill_vs_persistence": 0.4146
+    },
+    {
+      "group": "7-24h",
+      "model": "persistence",
+      "n": 32390,
+      "mae": 17.1378,
+      "rmse": 27.5125,
+      "skill_vs_persistence": 0.0
+    },
+    {
+      "group": "7-24h",
+      "model": "seasonal naive",
+      "n": 32390,
+      "mae": 13.4576,
+      "rmse": 23.0545,
+      "skill_vs_persistence": 0.2147
+    },
+    {
+      "group": "7-24h",
+      "model": "SARIMAX",
+      "n": 32390,
+      "mae": 12.3009,
+      "rmse": 20.9039,
+      "skill_vs_persistence": 0.2822
+    },
+    {
+      "group": "7-24h",
+      "model": "LightGBM",
+      "n": 32390,
+      "mae": 10.4964,
+      "rmse": 18.1814,
+      "skill_vs_persistence": 0.3875
+    },
+    {
+      "group": "all",
+      "model": "persistence",
+      "n": 86140,
+      "mae": 17.5486,
+      "rmse": 28.455,
+      "skill_vs_persistence": 0.0
+    },
+    {
+      "group": "all",
+      "model": "seasonal naive",
+      "n": 86140,
+      "mae": 14.1676,
+      "rmse": 23.8787,
+      "skill_vs_persistence": 0.1927
+    },
+    {
+      "group": "all",
+      "model": "SARIMAX",
+      "n": 86140,
+      "mae": 12.0318,
+      "rmse": 20.5659,
+      "skill_vs_persistence": 0.3144
+    },
+    {
+      "group": "all",
+      "model": "LightGBM",
+      "n": 86140,
+      "mae": 10.2514,
+      "rmse": 17.9767,
+      "skill_vs_persistence": 0.4158
+    }
+  ],
+  "by_city": [
+    {
+      "group": "Beijing",
+      "model": "persistence",
+      "n": 34384,
+      "mae": 35.6215,
+      "rmse": 47.8442,
+      "skill_vs_persistence": 0.0
+    },
+    {
+      "group": "Beijing",
+      "model": "seasonal naive",
+      "n": 34384,
+      "mae": 28.8486,
+      "rmse": 39.1906,
+      "skill_vs_persistence": 0.1901
+    },
+    {
+      "group": "Beijing",
+      "model": "LightGBM",
+      "n": 34384,
+      "mae": 18.8922,
+      "rmse": 25.8184,
+      "skill_vs_persistence": 0.4696
+    },
+    {
+      "group": "Cairo",
+      "model": "persistence",
+      "n": 34384,
+      "mae": 6.292,
+      "rmse": 8.7351,
+      "skill_vs_persistence": 0.0
+    },
+    {
+      "group": "Cairo",
+      "model": "seasonal naive",
+      "n": 34384,
+      "mae": 6.1597,
+      "rmse": 8.5525,
+      "skill_vs_persistence": 0.021
+    },
+    {
+      "group": "Cairo",
+      "model": "LightGBM",
+      "n": 34384,
+      "mae": 4.3807,
+      "rmse": 6.2091,
+      "skill_vs_persistence": 0.3038
+    },
+    {
+      "group": "Delhi",
+      "model": "persistence",
+      "n": 34384,
+      "mae": 29.6328,
+      "rmse": 42.2169,
+      "skill_vs_persistence": 0.0
+    },
+    {
+      "group": "Delhi",
+      "model": "seasonal naive",
+      "n": 34384,
+      "mae": 28.9404,
+      "rmse": 41.0745,
+      "skill_vs_persistence": 0.0234
+    },
+    {
+      "group": "Delhi",
+      "model": "LightGBM",
+      "n": 34384,
+      "mae": 21.9621,
+      "rmse": 32.7019,
+      "skill_vs_persistence": 0.2589
+    },
+    {
+      "group": "Jakarta",
+      "model": "persistence",
+      "n": 34384,
+      "mae": 41.5687,
+      "rmse": 52.7944,
+      "skill_vs_persistence": 0.0
+    },
+    {
+      "group": "Jakarta",
+      "model": "seasonal naive",
+      "n": 34384,
+      "mae": 21.9241,
+      "rmse": 29.8276,
+      "skill_vs_persistence": 0.4726
+    },
+    {
+      "group": "Jakarta",
+      "model": "LightGBM",
+      "n": 34384,
+      "mae": 18.0787,
+      "rmse": 24.7651,
+      "skill_vs_persistence": 0.5651
+    },
+    {
+      "group": "Lagos",
+      "model": "persistence",
+      "n": 34384,
+      "mae": 7.6361,
+      "rmse": 12.1678,
+      "skill_vs_persistence": 0.0
+    },
+    {
+      "group": "Lagos",
+      "model": "seasonal naive",
+      "n": 34384,
+      "mae": 6.4445,
+      "rmse": 10.7202,
+      "skill_vs_persistence": 0.1561
+    },
+    {
+      "group": "Lagos",
+      "model": "LightGBM",
+      "n": 34384,
+      "mae": 4.4587,
+      "rmse": 7.562,
+      "skill_vs_persistence": 0.4161
+    },
+    {
+      "group": "Lahore",
+      "model": "persistence",
+      "n": 34384,
+      "mae": 22.298,
+      "rmse": 30.6714,
+      "skill_vs_persistence": 0.0
+    },
+    {
+      "group": "Lahore",
+      "model": "seasonal naive",
+      "n": 34384,
+      "mae": 20.3622,
+      "rmse": 28.8888,
+      "skill_vs_persistence": 0.0868
+    },
+    {
+      "group": "Lahore",
+      "model": "LightGBM",
+      "n": 34384,
+      "mae": 14.9091,
+      "rmse": 21.5096,
+      "skill_vs_persistence": 0.3314
+    },
+    {
+      "group": "London",
+      "model": "persistence",
+      "n": 34384,
+      "mae": 4.9885,
+      "rmse": 7.5658,
+      "skill_vs_persistence": 0.0
+    },
+    {
+      "group": "London",
+      "model": "seasonal naive",
+      "n": 34384,
+      "mae": 5.2292,
+      "rmse": 7.7246,
+      "skill_vs_persistence": -0.0483
+    },
+    {
+      "group": "London",
+      "model": "LightGBM",
+      "n": 34384,
+      "mae": 3.1878,
+      "rmse": 4.7129,
+      "skill_vs_persistence": 0.361
+    },
+    {
+      "group": "Los Angeles",
+      "model": "persistence",
+      "n": 34384,
+      "mae": 6.0615,
+      "rmse": 8.0513,
+      "skill_vs_persistence": 0.0
+    },
+    {
+      "group": "Los Angeles",
+      "model": "seasonal naive",
+      "n": 34384,
+      "mae": 4.7696,
+      "rmse": 6.4667,
+      "skill_vs_persistence": 0.2131
+    },
+    {
+      "group": "Los Angeles",
+      "model": "LightGBM",
+      "n": 34384,
+      "mae": 4.079,
+      "rmse": 5.4728,
+      "skill_vs_persistence": 0.3271
+    },
+    {
+      "group": "Mumbai",
+      "model": "persistence",
+      "n": 34384,
+      "mae": 6.1384,
+      "rmse": 10.6745,
+      "skill_vs_persistence": 0.0
+    },
+    {
+      "group": "Mumbai",
+      "model": "seasonal naive",
+      "n": 34384,
+      "mae": 5.79,
+      "rmse": 9.7276,
+      "skill_vs_persistence": 0.0568
+    },
+    {
+      "group": "Mumbai",
+      "model": "LightGBM",
+      "n": 34384,
+      "mae": 4.8725,
+      "rmse": 8.3875,
+      "skill_vs_persistence": 0.2062
+    },
+    {
+      "group": "S\u00e3o Paulo",
+      "model": "persistence",
+      "n": 34384,
+      "mae": 13.1823,
+      "rmse": 19.5874,
+      "skill_vs_persistence": 0.0
+    },
+    {
+      "group": "S\u00e3o Paulo",
+      "model": "seasonal naive",
+      "n": 34384,
+      "mae": 13.2606,
+      "rmse": 19.4123,
+      "skill_vs_persistence": -0.0059
+    },
+    {
+      "group": "S\u00e3o Paulo",
+      "model": "LightGBM",
+      "n": 34384,
+      "mae": 7.5343,
+      "rmse": 11.4544,
+      "skill_vs_persistence": 0.4285
+    },
+    {
+      "group": "all",
+      "model": "persistence",
+      "n": 343840,
+      "mae": 17.342,
+      "rmse": 29.3996,
+      "skill_vs_persistence": 0.0
+    },
+    {
+      "group": "all",
+      "model": "seasonal naive",
+      "n": 343840,
+      "mae": 14.1729,
+      "rmse": 23.892,
+      "skill_vs_persistence": 0.1827
+    },
+    {
+      "group": "all",
+      "model": "LightGBM",
+      "n": 343840,
+      "mae": 10.2355,
+      "rmse": 17.7804,
+      "skill_vs_persistence": 0.4098
+    }
+  ],
+  "by_horizon": [
+    {
+      "group": 1,
+      "model": "persistence",
+      "n": 7200,
+      "mae": 3.6599,
+      "rmse": 7.4321,
+      "skill_vs_persistence": 0.0
+    },
+    {
+      "group": 1,
+      "model": "seasonal naive",
+      "n": 7200,
+      "mae": 13.3724,
+      "rmse": 22.6265,
+      "skill_vs_persistence": -2.6537
+    },
+    {
+      "group": 1,
+      "model": "LightGBM",
+      "n": 7200,
+      "mae": 4.1966,
+      "rmse": 7.4597,
+      "skill_vs_persistence": -0.1466
+    },
+    {
+      "group": 2,
+      "model": "persistence",
+      "n": 7200,
+      "mae": 6.8735,
+      "rmse": 13.2757,
+      "skill_vs_persistence": 0.0
+    },
+    {
+      "group": 2,
+      "model": "seasonal naive",
+      "n": 7200,
+      "mae": 12.9689,
+      "rmse": 21.9657,
+      "skill_vs_persistence": -0.8868
+    },
+    {
+      "group": 2,
+      "model": "LightGBM",
+      "n": 7200,
+      "mae": 4.9268,
+      "rmse": 8.6059,
+      "skill_vs_persistence": 0.2832
+    },
+    {
+      "group": 3,
+      "model": "persistence",
+      "n": 7200,
+      "mae": 9.436,
+      "rmse": 17.4114,
+      "skill_vs_persistence": 0.0
+    },
+    {
+      "group": 3,
+      "model": "seasonal naive",
+      "n": 7200,
+      "mae": 12.7992,
+      "rmse": 21.789,
+      "skill_vs_persistence": -0.3564
+    },
+    {
+      "group": 3,
+      "model": "LightGBM",
+      "n": 7200,
+      "mae": 5.9843,
+      "rmse": 10.4099,
+      "skill_vs_persistence": 0.3658
+    },
+    {
+      "group": 4,
+      "model": "persistence",
+      "n": 7200,
+      "mae": 11.7157,
+      "rmse": 20.7538,
+      "skill_vs_persistence": 0.0
+    },
+    {
+      "group": 4,
+      "model": "seasonal naive",
+      "n": 7200,
+      "mae": 12.9589,
+      "rmse": 22.1599,
+      "skill_vs_persistence": -0.1061
+    },
+    {
+      "group": 4,
+      "model": "LightGBM",
+      "n": 7200,
+      "mae": 7.1754,
+      "rmse": 12.4792,
+      "skill_vs_persistence": 0.3875
+    },
+    {
+      "group": 5,
+      "model": "persistence",
+      "n": 7200,
+      "mae": 13.7641,
+      "rmse": 23.6121,
+      "skill_vs_persistence": 0.0
+    },
+    {
+      "group": 5,
+      "model": "seasonal naive",
+      "n": 7200,
+      "mae": 13.2644,
+      "rmse": 22.5833,
+      "skill_vs_persistence": 0.0363
+    },
+    {
+      "group": 5,
+      "model": "LightGBM",
+      "n": 7200,
+      "mae": 8.0896,
+      "rmse": 14.1651,
+      "skill_vs_persistence": 0.4123
+    },
+    {
+      "group": 6,
+      "model": "persistence",
+      "n": 7190,
+      "mae": 15.7382,
+      "rmse": 26.47,
+      "skill_vs_persistence": 0.0
+    },
+    {
+      "group": 6,
+      "model": "seasonal naive",
+      "n": 7190,
+      "mae": 13.4907,
+      "rmse": 23.0589,
+      "skill_vs_persistence": 0.1428
+    },
+    {
+      "group": 6,
+      "model": "LightGBM",
+      "n": 7190,
+      "mae": 9.2832,
+      "rmse": 16.098,
+      "skill_vs_persistence": 0.4102
+    },
+    {
+      "group": 7,
+      "model": "persistence",
+      "n": 7190,
+      "mae": 17.0291,
+      "rmse": 28.6894,
+      "skill_vs_persistence": 0.0
+    },
+    {
+      "group": 7,
+      "model": "seasonal naive",
+      "n": 7190,
+      "mae": 13.3752,
+      "rmse": 22.6366,
+      "skill_vs_persistence": 0.2146
+    },
+    {
+      "group": 7,
+      "model": "LightGBM",
+      "n": 7190,
+      "mae": 9.4751,
+      "rmse": 16.2786,
+      "skill_vs_persistence": 0.4436
+    },
+    {
+      "group": 8,
+      "model": "persistence",
+      "n": 7190,
+      "mae": 18.4082,
+      "rmse": 30.9345,
+      "skill_vs_persistence": 0.0
+    },
+    {
+      "group": 8,
+      "model": "seasonal naive",
+      "n": 7190,
+      "mae": 12.9759,
+      "rmse": 21.9772,
+      "skill_vs_persistence": 0.2951
+    },
+    {
+      "group": 8,
+      "model": "LightGBM",
+      "n": 7190,
+      "mae": 9.3297,
+      "rmse": 16.1222,
+      "skill_vs_persistence": 0.4932
+    },
+    {
+      "group": 9,
+      "model": "persistence",
+      "n": 7190,
+      "mae": 19.4129,
+      "rmse": 32.601,
+      "skill_vs_persistence": 0.0
+    },
+    {
+      "group": 9,
+      "model": "seasonal naive",
+      "n": 7190,
+      "mae": 12.8052,
+      "rmse": 21.7994,
+      "skill_vs_persistence": 0.3404
+    },
+    {
+      "group": 9,
+      "model": "LightGBM",
+      "n": 7190,
+      "mae": 9.3866,
+      "rmse": 16.3506,
+      "skill_vs_persistence": 0.5165
+    },
+    {
+      "group": 10,
+      "model": "persistence",
+      "n": 7190,
+      "mae": 20.0199,
+      "rmse": 33.5357,
+      "skill_vs_persistence": 0.0
+    },
+    {
+      "group": 10,
+      "model": "seasonal naive",
+      "n": 7190,
+      "mae": 12.9644,
+      "rmse": 22.17,
+      "skill_vs_persistence": 0.3524
+    },
+    {
+      "group": 10,
+      "model": "LightGBM",
+      "n": 7190,
+      "mae": 9.7171,
+      "rmse": 16.9426,
+      "skill_vs_persistence": 0.5146
+    },
+    {
+      "group": 11,
+      "model": "persistence",
+      "n": 7190,
+      "mae": 20.2614,
+      "rmse": 33.8797,
+      "skill_vs_persistence": 0.0
+    },
+    {
+      "group": 11,
+      "model": "seasonal naive",
+      "n": 7190,
+      "mae": 13.2714,
+      "rmse": 22.5947,
+      "skill_vs_persistence": 0.345
+    },
+    {
+      "group": 11,
+      "model": "LightGBM",
+      "n": 7190,
+      "mae": 10.0474,
+      "rmse": 17.5039,
+      "skill_vs_persistence": 0.5041
+    },
+    {
+      "group": 12,
+      "model": "persistence",
+      "n": 7180,
+      "mae": 20.1893,
+      "rmse": 33.5594,
+      "skill_vs_persistence": 0.0
+    },
+    {
+      "group": 12,
+      "model": "seasonal naive",
+      "n": 7180,
+      "mae": 13.4979,
+      "rmse": 23.0697,
+      "skill_vs_persistence": 0.3314
+    },
+    {
+      "group": 12,
+      "model": "LightGBM",
+      "n": 7180,
+      "mae": 10.4789,
+      "rmse": 18.194,
+      "skill_vs_persistence": 0.481
+    },
+    {
+      "group": 13,
+      "model": "persistence",
+      "n": 7180,
+      "mae": 19.753,
+      "rmse": 32.7573,
+      "skill_vs_persistence": 0.0
+    },
+    {
+      "group": 13,
+      "model": "seasonal naive",
+      "n": 7180,
+      "mae": 13.3819,
+      "rmse": 22.6467,
+      "skill_vs_persistence": 0.3225
+    },
+    {
+      "group": 13,
+      "model": "LightGBM",
+      "n": 7180,
+      "mae": 10.4034,
+      "rmse": 17.8547,
+      "skill_vs_persistence": 0.4733
+    },
+    {
+      "group": 14,
+      "model": "persistence",
+      "n": 7180,
+      "mae": 19.5821,
+      "rmse": 32.4771,
+      "skill_vs_persistence": 0.0
+    },
+    {
+      "group": 14,
+      "model": "seasonal naive",
+      "n": 7180,
+      "mae": 12.9805,
+      "rmse": 21.9859,
+      "skill_vs_persistence": 0.3371
+    },
+    {
+      "group": 14,
+      "model": "LightGBM",
+      "n": 7180,
+      "mae": 10.0185,
+      "rmse": 17.2153,
+      "skill_vs_persistence": 0.4884
+    },
+    {
+      "group": 15,
+      "model": "persistence",
+      "n": 7180,
+      "mae": 19.4057,
+      "rmse": 32.2248,
+      "skill_vs_persistence": 0.0
+    },
+    {
+      "group": 15,
+      "model": "seasonal naive",
+      "n": 7180,
+      "mae": 12.8079,
+      "rmse": 21.8065,
+      "skill_vs_persistence": 0.34
+    },
+    {
+      "group": 15,
+      "model": "LightGBM",
+      "n": 7180,
+      "mae": 9.9792,
+      "rmse": 17.1777,
+      "skill_vs_persistence": 0.4858
+    },
+    {
+      "group": 16,
+      "model": "persistence",
+      "n": 7180,
+      "mae": 19.1608,
+      "rmse": 31.7476,
+      "skill_vs_persistence": 0.0
+    },
+    {
+      "group": 16,
+      "model": "seasonal naive",
+      "n": 7180,
+      "mae": 12.9665,
+      "rmse": 22.1776,
+      "skill_vs_persistence": 0.3233
+    },
+    {
+      "group": 16,
+      "model": "LightGBM",
+      "n": 7180,
+      "mae": 10.1351,
+      "rmse": 17.4751,
+      "skill_vs_persistence": 0.471
+    },
+    {
+      "group": 17,
+      "model": "persistence",
+      "n": 7180,
+      "mae": 18.9608,
+      "rmse": 31.3821,
+      "skill_vs_persistence": 0.0
+    },
+    {
+      "group": 17,
+      "model": "seasonal naive",
+      "n": 7180,
+      "mae": 13.2752,
+      "rmse": 22.6037,
+      "skill_vs_persistence": 0.2999
+    },
+    {
+      "group": 17,
+      "model": "LightGBM",
+      "n": 7180,
+      "mae": 10.4018,
+      "rmse": 17.872,
+      "skill_vs_persistence": 0.4514
+    },
+    {
+      "group": 18,
+      "model": "persistence",
+      "n": 7170,
+      "mae": 18.0682,
+      "rmse": 29.9463,
+      "skill_vs_persistence": 0.0
+    },
+    {
+      "group": 18,
+      "model": "seasonal naive",
+      "n": 7170,
+      "mae": 13.5056,
+      "rmse": 23.0825,
+      "skill_vs_persistence": 0.2525
+    },
+    {
+      "group": 18,
+      "model": "LightGBM",
+      "n": 7170,
+      "mae": 10.7454,
+      "rmse": 18.4427,
+      "skill_vs_persistence": 0.4053
+    },
+    {
+      "group": 19,
+      "model": "persistence",
+      "n": 7170,
+      "mae": 16.9055,
+      "rmse": 27.7917,
+      "skill_vs_persistence": 0.0
+    },
+    {
+      "group": 19,
+      "model": "seasonal naive",
+      "n": 7170,
+      "mae": 13.3869,
+      "rmse": 22.6587,
+      "skill_vs_persistence": 0.2081
+    },
+    {
+      "group": 19,
+      "model": "LightGBM",
+      "n": 7170,
+      "mae": 10.5587,
+      "rmse": 18.0101,
+      "skill_vs_persistence": 0.3754
+    },
+    {
+      "group": 20,
+      "model": "persistence",
+      "n": 7170,
+      "mae": 15.6033,
+      "rmse": 25.9332,
+      "skill_vs_persistence": 0.0
+    },
+    {
+      "group": 20,
+      "model": "seasonal naive",
+      "n": 7170,
+      "mae": 12.9811,
+      "rmse": 21.9919,
+      "skill_vs_persistence": 0.1681
+    },
+    {
+      "group": 20,
+      "model": "LightGBM",
+      "n": 7170,
+      "mae": 10.1558,
+      "rmse": 17.3844,
+      "skill_vs_persistence": 0.3491
+    },
+    {
+      "group": 21,
+      "model": "persistence",
+      "n": 7170,
+      "mae": 14.8373,
+      "rmse": 24.8684,
+      "skill_vs_persistence": 0.0
+    },
+    {
+      "group": 21,
+      "model": "seasonal naive",
+      "n": 7170,
+      "mae": 12.8047,
+      "rmse": 21.8051,
+      "skill_vs_persistence": 0.137
+    },
+    {
+      "group": 21,
+      "model": "LightGBM",
+      "n": 7170,
+      "mae": 10.1147,
+      "rmse": 17.3227,
+      "skill_vs_persistence": 0.3183
+    },
+    {
+      "group": 22,
+      "model": "persistence",
+      "n": 7170,
+      "mae": 14.2434,
+      "rmse": 23.9724,
+      "skill_vs_persistence": 0.0
+    },
+    {
+      "group": 22,
+      "model": "seasonal naive",
+      "n": 7170,
+      "mae": 12.9638,
+      "rmse": 22.1771,
+      "skill_vs_persistence": 0.0898
+    },
+    {
+      "group": 22,
+      "model": "LightGBM",
+      "n": 7170,
+      "mae": 10.3182,
+      "rmse": 17.6479,
+      "skill_vs_persistence": 0.2756
+    },
+    {
+      "group": 23,
+      "model": "persistence",
+      "n": 7170,
+      "mae": 13.8308,
+      "rmse": 23.3841,
+      "skill_vs_persistence": 0.0
+    },
+    {
+      "group": 23,
+      "model": "seasonal naive",
+      "n": 7170,
+      "mae": 13.2758,
+      "rmse": 22.6074,
+      "skill_vs_persistence": 0.0401
+    },
+    {
+      "group": 23,
+      "model": "LightGBM",
+      "n": 7170,
+      "mae": 10.5511,
+      "rmse": 18.0431,
+      "skill_vs_persistence": 0.2371
+    },
+    {
+      "group": 24,
+      "model": "persistence",
+      "n": 7160,
+      "mae": 13.5074,
+      "rmse": 23.0902,
+      "skill_vs_persistence": 0.0
+    },
+    {
+      "group": 24,
+      "model": "seasonal naive",
+      "n": 7160,
+      "mae": 13.5074,
+      "rmse": 23.0902,
+      "skill_vs_persistence": 0.0
+    },
+    {
+      "group": 24,
+      "model": "LightGBM",
+      "n": 7160,
+      "mae": 10.8735,
+      "rmse": 18.6625,
+      "skill_vs_persistence": 0.195
+    },
+    {
+      "group": 25,
+      "model": "persistence",
+      "n": 7160,
+      "mae": 13.9698,
+      "rmse": 23.7027,
+      "skill_vs_persistence": 0.0
+    },
+    {
+      "group": 25,
+      "model": "seasonal naive",
+      "n": 7160,
+      "mae": 15.3912,
+      "rmse": 25.5037,
+      "skill_vs_persistence": -0.1017
+    },
+    {
+      "group": 25,
+      "model": "LightGBM",
+      "n": 7160,
+      "mae": 10.7127,
+      "rmse": 18.3199,
+      "skill_vs_persistence": 0.2332
+    },
+    {
+      "group": 26,
+      "model": "persistence",
+      "n": 7160,
+      "mae": 14.8979,
+      "rmse": 25.1117,
+      "skill_vs_persistence": 0.0
+    },
+    {
+      "group": 26,
+      "model": "seasonal naive",
+      "n": 7160,
+      "mae": 15.0727,
+      "rmse": 24.9293,
+      "skill_vs_persistence": -0.0117
+    },
+    {
+      "group": 26,
+      "model": "LightGBM",
+      "n": 7160,
+      "mae": 10.3732,
+      "rmse": 17.782,
+      "skill_vs_persistence": 0.3037
+    },
+    {
+      "group": 27,
+      "model": "persistence",
+      "n": 7160,
+      "mae": 15.8348,
+      "rmse": 26.5095,
+      "skill_vs_persistence": 0.0
+    },
+    {
+      "group": 27,
+      "model": "seasonal naive",
+      "n": 7160,
+      "mae": 14.8495,
+      "rmse": 24.6807,
+      "skill_vs_persistence": 0.0622
+    },
+    {
+      "group": 27,
+      "model": "LightGBM",
+      "n": 7160,
+      "mae": 10.378,
+      "rmse": 17.6848,
+      "skill_vs_persistence": 0.3446
+    },
+    {
+      "group": 28,
+      "model": "persistence",
+      "n": 7160,
+      "mae": 16.8746,
+      "rmse": 27.9834,
+      "skill_vs_persistence": 0.0
+    },
+    {
+      "group": 28,
+      "model": "seasonal naive",
+      "n": 7160,
+      "mae": 14.997,
+      "rmse": 25.0756,
+      "skill_vs_persistence": 0.1113
+    },
+    {
+      "group": 28,
+      "model": "LightGBM",
+      "n": 7160,
+      "mae": 10.6118,
+      "rmse": 18.1137,
+      "skill_vs_persistence": 0.3711
+    },
+    {
+      "group": 29,
+      "model": "persistence",
+      "n": 7160,
+      "mae": 18.0499,
+      "rmse": 29.5777,
+      "skill_vs_persistence": 0.0
+    },
+    {
+      "group": 29,
+      "model": "seasonal naive",
+      "n": 7160,
+      "mae": 15.3673,
+      "rmse": 25.6173,
+      "skill_vs_persistence": 0.1486
+    },
+    {
+      "group": 29,
+      "model": "LightGBM",
+      "n": 7160,
+      "mae": 11.0111,
+      "rmse": 18.8066,
+      "skill_vs_persistence": 0.39
+    },
+    {
+      "group": 30,
+      "model": "persistence",
+      "n": 7150,
+      "mae": 18.9962,
+      "rmse": 31.158,
+      "skill_vs_persistence": 0.0
+    },
+    {
+      "group": 30,
+      "model": "seasonal naive",
+      "n": 7150,
+      "mae": 15.5138,
+      "rmse": 26.0131,
+      "skill_vs_persistence": 0.1833
+    },
+    {
+      "group": 30,
+      "model": "LightGBM",
+      "n": 7150,
+      "mae": 11.466,
+      "rmse": 19.6326,
+      "skill_vs_persistence": 0.3964
+    },
+    {
+      "group": 31,
+      "model": "persistence",
+      "n": 7150,
+      "mae": 19.9335,
+      "rmse": 32.5409,
+      "skill_vs_persistence": 0.0
+    },
+    {
+      "group": 31,
+      "model": "seasonal naive",
+      "n": 7150,
+      "mae": 15.3981,
+      "rmse": 25.5165,
+      "skill_vs_persistence": 0.2275
+    },
+    {
+      "group": 31,
+      "model": "LightGBM",
+      "n": 7150,
+      "mae": 11.3829,
+      "rmse": 19.3479,
+      "skill_vs_persistence": 0.429
+    },
+    {
+      "group": 32,
+      "model": "persistence",
+      "n": 7150,
+      "mae": 20.9382,
+      "rmse": 34.0928,
+      "skill_vs_persistence": 0.0
+    },
+    {
+      "group": 32,
+      "model": "seasonal naive",
+      "n": 7150,
+      "mae": 15.0743,
+      "rmse": 24.9385,
+      "skill_vs_persistence": 0.2801
+    },
+    {
+      "group": 32,
+      "model": "LightGBM",
+      "n": 7150,
+      "mae": 11.0539,
+      "rmse": 18.8651,
+      "skill_vs_persistence": 0.4721
+    },
+    {
+      "group": 33,
+      "model": "persistence",
+      "n": 7150,
+      "mae": 21.6238,
+      "rmse": 35.2311,
+      "skill_vs_persistence": 0.0
+    },
+    {
+      "group": 33,
+      "model": "seasonal naive",
+      "n": 7150,
+      "mae": 14.8489,
+      "rmse": 24.6865,
+      "skill_vs_persistence": 0.3133
+    },
+    {
+      "group": 33,
+      "model": "LightGBM",
+      "n": 7150,
+      "mae": 10.9135,
+      "rmse": 18.6876,
+      "skill_vs_persistence": 0.4953
+    },
+    {
+      "group": 34,
+      "model": "persistence",
+      "n": 7150,
+      "mae": 21.9713,
+      "rmse": 35.8236,
+      "skill_vs_persistence": 0.0
+    },
+    {
+      "group": 34,
+      "model": "seasonal naive",
+      "n": 7150,
+      "mae": 14.9975,
+      "rmse": 25.0808,
+      "skill_vs_persistence": 0.3174
+    },
+    {
+      "group": 34,
+      "model": "LightGBM",
+      "n": 7150,
+      "mae": 11.0931,
+      "rmse": 18.9668,
+      "skill_vs_persistence": 0.4951
+    },
+    {
+      "group": 35,
+      "model": "persistence",
+      "n": 7150,
+      "mae": 22.0559,
+      "rmse": 36.0191,
+      "skill_vs_persistence": 0.0
+    },
+    {
+      "group": 35,
+      "model": "seasonal naive",
+      "n": 7150,
+      "mae": 15.3711,
+      "rmse": 25.6257,
+      "skill_vs_persistence": 0.3031
+    },
+    {
+      "group": 35,
+      "model": "LightGBM",
+      "n": 7150,
+      "mae": 11.396,
+      "rmse": 19.4888,
+      "skill_vs_persistence": 0.4833
+    },
+    {
+      "group": 36,
+      "model": "persistence",
+      "n": 7140,
+      "mae": 21.9097,
+      "rmse": 35.7609,
+      "skill_vs_persistence": 0.0
+    },
+    {
+      "group": 36,
+      "model": "seasonal naive",
+      "n": 7140,
+      "mae": 15.52,
+      "rmse": 26.026,
+      "skill_vs_persistence": 0.2916
+    },
+    {
+      "group": 36,
+      "model": "LightGBM",
+      "n": 7140,
+      "mae": 11.7735,
+      "rmse": 20.2478,
+      "skill_vs_persistence": 0.4626
+    },
+    {
+      "group": 37,
+      "model": "persistence",
+      "n": 7140,
+      "mae": 21.456,
+      "rmse": 34.8875,
+      "skill_vs_persistence": 0.0
+    },
+    {
+      "group": 37,
+      "model": "seasonal naive",
+      "n": 7140,
+      "mae": 15.4062,
+      "rmse": 25.5302,
+      "skill_vs_persistence": 0.282
+    },
+    {
+      "group": 37,
+      "model": "LightGBM",
+      "n": 7140,
+      "mae": 11.6449,
+      "rmse": 19.8289,
+      "skill_vs_persistence": 0.4573
+    },
+    {
+      "group": 38,
+      "model": "persistence",
+      "n": 7140,
+      "mae": 21.2473,
+      "rmse": 34.4878,
+      "skill_vs_persistence": 0.0
+    },
+    {
+      "group": 38,
+      "model": "seasonal naive",
+      "n": 7140,
+      "mae": 15.08,
+      "rmse": 24.9512,
+      "skill_vs_persistence": 0.2903
+    },
+    {
+      "group": 38,
+      "model": "LightGBM",
+      "n": 7140,
+      "mae": 11.2277,
+      "rmse": 19.1864,
+      "skill_vs_persistence": 0.4716
+    },
+    {
+      "group": 39,
+      "model": "persistence",
+      "n": 7140,
+      "mae": 21.0933,
+      "rmse": 34.1497,
+      "skill_vs_persistence": 0.0
+    },
+    {
+      "group": 39,
+      "model": "seasonal naive",
+      "n": 7140,
+      "mae": 14.8524,
+      "rmse": 24.6981,
+      "skill_vs_persistence": 0.2959
+    },
+    {
+      "group": 39,
+      "model": "LightGBM",
+      "n": 7140,
+      "mae": 11.1119,
+      "rmse": 18.9636,
+      "skill_vs_persistence": 0.4732
+    },
+    {
+      "group": 40,
+      "model": "persistence",
+      "n": 7140,
+      "mae": 20.806,
+      "rmse": 33.6874,
+      "skill_vs_persistence": 0.0
+    },
+    {
+      "group": 40,
+      "model": "seasonal naive",
+      "n": 7140,
+      "mae": 14.9996,
+      "rmse": 25.0911,
+      "skill_vs_persistence": 0.2791
+    },
+    {
+      "group": 40,
+      "model": "LightGBM",
+      "n": 7140,
+      "mae": 11.2447,
+      "rmse": 19.2017,
+      "skill_vs_persistence": 0.4595
+    },
+    {
+      "group": 41,
+      "model": "persistence",
+      "n": 7140,
+      "mae": 20.5982,
+      "rmse": 33.4089,
+      "skill_vs_persistence": 0.0
+    },
+    {
+      "group": 41,
+      "model": "seasonal naive",
+      "n": 7140,
+      "mae": 15.3739,
+      "rmse": 25.6367,
+      "skill_vs_persistence": 0.2536
+    },
+    {
+      "group": 41,
+      "model": "LightGBM",
+      "n": 7140,
+      "mae": 11.5087,
+      "rmse": 19.6331,
+      "skill_vs_persistence": 0.4413
+    },
+    {
+      "group": 42,
+      "model": "persistence",
+      "n": 7130,
+      "mae": 19.6804,
+      "rmse": 32.1326,
+      "skill_vs_persistence": 0.0
+    },
+    {
+      "group": 42,
+      "model": "seasonal naive",
+      "n": 7130,
+      "mae": 15.5249,
+      "rmse": 26.0379,
+      "skill_vs_persistence": 0.2112
+    },
+    {
+      "group": 42,
+      "model": "LightGBM",
+      "n": 7130,
+      "mae": 11.8208,
+      "rmse": 20.2286,
+      "skill_vs_persistence": 0.3994
+    },
+    {
+      "group": 43,
+      "model": "persistence",
+      "n": 7130,
+      "mae": 18.5764,
+      "rmse": 30.1927,
+      "skill_vs_persistence": 0.0
+    },
+    {
+      "group": 43,
+      "model": "seasonal naive",
+      "n": 7130,
+      "mae": 15.4052,
+      "rmse": 25.5355,
+      "skill_vs_persistence": 0.1707
+    },
+    {
+      "group": 43,
+      "model": "LightGBM",
+      "n": 7130,
+      "mae": 11.6337,
+      "rmse": 19.7762,
+      "skill_vs_persistence": 0.3737
+    },
+    {
+      "group": 44,
+      "model": "persistence",
+      "n": 7130,
+      "mae": 17.4432,
+      "rmse": 28.495,
+      "skill_vs_persistence": 0.0
+    },
+    {
+      "group": 44,
+      "model": "seasonal naive",
+      "n": 7130,
+      "mae": 15.0763,
+      "rmse": 24.9516,
+      "skill_vs_persistence": 0.1357
+    },
+    {
+      "group": 44,
+      "model": "LightGBM",
+      "n": 7130,
+      "mae": 11.1966,
+      "rmse": 19.1588,
+      "skill_vs_persistence": 0.3581
+    },
+    {
+      "group": 45,
+      "model": "persistence",
+      "n": 7130,
+      "mae": 16.7275,
+      "rmse": 27.4713,
+      "skill_vs_persistence": 0.0
+    },
+    {
+      "group": 45,
+      "model": "seasonal naive",
+      "n": 7130,
+      "mae": 14.8475,
+      "rmse": 24.696,
+      "skill_vs_persistence": 0.1124
+    },
+    {
+      "group": 45,
+      "model": "LightGBM",
+      "n": 7130,
+      "mae": 11.1089,
+      "rmse": 18.96,
+      "skill_vs_persistence": 0.3359
+    },
+    {
+      "group": 46,
+      "model": "persistence",
+      "n": 7130,
+      "mae": 16.232,
+      "rmse": 26.7393,
+      "skill_vs_persistence": 0.0
+    },
+    {
+      "group": 46,
+      "model": "seasonal naive",
+      "n": 7130,
+      "mae": 14.9946,
+      "rmse": 25.0882,
+      "skill_vs_persistence": 0.0762
+    },
+    {
+      "group": 46,
+      "model": "LightGBM",
+      "n": 7130,
+      "mae": 11.2309,
+      "rmse": 19.2215,
+      "skill_vs_persistence": 0.3081
+    },
+    {
+      "group": 47,
+      "model": "persistence",
+      "n": 7130,
+      "mae": 15.8744,
+      "rmse": 26.3221,
+      "skill_vs_persistence": 0.0
+    },
+    {
+      "group": 47,
+      "model": "seasonal naive",
+      "n": 7130,
+      "mae": 15.3708,
+      "rmse": 25.6364,
+      "skill_vs_persistence": 0.0317
+    },
+    {
+      "group": 47,
+      "model": "LightGBM",
+      "n": 7130,
+      "mae": 11.4856,
+      "rmse": 19.6612,
+      "skill_vs_persistence": 0.2765
+    },
+    {
+      "group": 48,
+      "model": "persistence",
+      "n": 7120,
+      "mae": 15.5258,
+      "rmse": 26.0423,
+      "skill_vs_persistence": 0.0
+    },
+    {
+      "group": 48,
+      "model": "seasonal naive",
+      "n": 7120,
+      "mae": 15.5258,
+      "rmse": 26.0423,
+      "skill_vs_persistence": 0.0
+    },
+    {
+      "group": 48,
+      "model": "LightGBM",
+      "n": 7120,
+      "mae": 11.7762,
+      "rmse": 20.2237,
+      "skill_vs_persistence": 0.2415
+    },
+    {
+      "group": "all",
+      "model": "persistence",
+      "n": 343840,
+      "mae": 17.342,
+      "rmse": 29.3996,
+      "skill_vs_persistence": 0.0
+    },
+    {
+      "group": "all",
+      "model": "seasonal naive",
+      "n": 343840,
+      "mae": 14.1729,
+      "rmse": 23.892,
+      "skill_vs_persistence": 0.1827
+    },
+    {
+      "group": "all",
+      "model": "LightGBM",
+      "n": 343840,
+      "mae": 10.2355,
+      "rmse": 17.7804,
+      "skill_vs_persistence": 0.4098
+    }
+  ]
+}
