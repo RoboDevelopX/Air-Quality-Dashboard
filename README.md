@@ -4,8 +4,9 @@ Current, historical and forecast air quality for any city, with a PM2.5 forecast
 its core. Built with Streamlit, Plotly, pandas and LightGBM on free data from
 [Open-Meteo](https://open-meteo.com/) (CAMS air quality).
 
-<!-- SCREENSHOT: replace with a real capture after the first live run -->
-![Dashboard screenshot](docs/screenshot.png)
+![Dashboard showing New Delhi's current US EPA AQI, a PM2.5 spike alert and health guidance](docs/screenshot.png)
+
+_Live data for New Delhi, captured 25 Oct 2026._
 
 ## Features
 
@@ -41,7 +42,8 @@ flowchart LR
     SVC -->|view models| UI[ui/ Streamlit + Plotly]
     TRAIN[scripts/train.py<br/>CV, reports, artifact] -.offline.-> ART
     SNAP[scripts/snapshot_forecasts.py<br/>scheduled in CI] -.-> SNAPS[(snapshots/)]
-    SNAPS -.-> TRAIN
+    SNAPS -.-> CMP[scripts/compare_provider.py<br/>model vs CAMS]
+    ART -.-> CMP
 ```
 
 | Package | Responsibility |
@@ -135,8 +137,9 @@ See [MODEL_CARD.md](MODEL_CARD.md) for the full details. In short:
 - **Data**: hourly CAMS PM2.5, PM10, NO₂, O₃, SO₂ and CO plus weather for 10 cities with very
   different regimes (Delhi, Mumbai, Lahore, Beijing, Cairo, Lagos, London, Los Angeles,
   São Paulo, Jakarta), from August 2022. Training weather comes from Open-Meteo's
-  *historical forecast* archive, so the model trains on the weather forecasts that existed at
-  the time rather than on observed weather it couldn't have known.
+  *historical forecast* archive. That archive stitches the first hours of each run together,
+  so the weather at the target hour is a short-range forecast, sharper than the 1-2 day
+  forecast the app actually has. A no-weather ablation below bounds how much that helps.
 - **Models**: persistence and seasonal-naive baselines, SARIMAX (Fourier daily terms), and a
   single global LightGBM direct multi-horizon model (horizon as a feature, log-ratio target).
 - **Evaluation**: rolling-origin CV with 6 folds of 30 days and a 48-hour gap, so no training
@@ -146,21 +149,55 @@ See [MODEL_CARD.md](MODEL_CARD.md) for the full details. In short:
 
 ### Results
 
-<!-- RESULTS: filled from reports/results.md after running scripts/train.py -->
-_Pending the first full training run. `scripts/train.py` writes the table to
-`reports/results.md`._
+Held-out period 26 Apr to 23 Oct 2026 (6 folds of 30 days), 10 cities, 343,840 forecasts.
+MAE in µg/m³ against CAMS. Skill is the reduction in MAE versus persistence ("no change").
+From [`reports/results.md`](reports/results.md) and
+[`reports/metrics.json`](reports/metrics.json).
+
+| Model | MAE 1-6h | MAE 7-24h | MAE 25-48h | RMSE (all) | Skill vs persistence (all) |
+|---|---|---|---|---|---|
+| Persistence | 10.20 | 17.73 | 18.85 | 29.40 | 0% |
+| Seasonal naive (same hour yesterday) | 13.14 | 13.15 | 15.20 | 23.89 | 18% |
+| **LightGBM** | **6.61** | **10.15** | **11.21** | **17.78** | **41%** |
+
+SARIMAX needs one fit per origin, so it ran at one origin per city per day. On those same
+86,140 rows:
 
 | Model | MAE 1-6h | MAE 7-24h | MAE 25-48h | Skill vs persistence (all) |
 |---|---|---|---|---|
-| Persistence | | | | 0% |
-| Seasonal naive | | | | |
-| SARIMAX | | | | |
-| LightGBM | | | | |
+| Persistence | 12.67 | 17.14 | 19.08 | 0% |
+| Seasonal naive | 12.20 | 13.46 | 15.20 | 19% |
+| SARIMAX | 7.28 | 12.30 | 13.02 | 31% |
+| **LightGBM** | **5.86** | **10.50** | **11.17** | **42%** |
+
+![MAE by forecast horizon for LightGBM, persistence and seasonal naive](reports/error_by_horizon.png)
+
+How to read this honestly:
+
+- **Persistence wins at 1 hour ahead** (MAE 3.66 vs 4.20). LightGBM is better from 2 hours on.
+- **Skill varies by city**: from 21% (Mumbai) and 26% (Delhi) to 57% (Jakarta).
+- **Long-horizon skill is somewhat flattered.** Training and CV use archived weather that is
+  sharper than a real 1-2 day forecast. With every weather input removed, skill falls from 41%
+  to 33% overall and from 40% to 32% at 25-48 h. Real-world skill should sit between the two.
+- **The test window is summer and monsoon.** It misses the Nov-Feb smog season in North India,
+  Pakistan and Beijing, when errors in absolute terms will be much larger.
+- **80% intervals covered 82%** of held-out values overall. They are fixed per horizon, so
+  expect under-coverage during pollution episodes.
+
+![Forecast tab: recent PM2.5, our 48-hour forecast with its 80% interval, and the CAMS forecast](docs/forecast.png)
 
 **Against the provider's own forecast.** Open-Meteo doesn't archive past air-quality
 forecasts, so a scheduled workflow (`.github/workflows/snapshot.yml`) saves the CAMS forecast
-twice a day into `snapshots/`. `scripts/train.py` then compares CAMS and our model on every
-snapshot issued after the training data ends, and writes `reports/provider_comparison.md`.
+twice a day into `snapshots/`. Once a few days of snapshots have their actuals,
+`python scripts/compare_provider.py` scores CAMS and our saved model on every snapshot issued
+after the training data ends and writes `reports/provider_comparison.md`. There is no result
+yet: the first snapshot was taken on 25 Oct 2026. Expect CAMS to win at short horizons, partly
+by construction, because the "actuals" are stitched from CAMS's own runs. A first live run
+showed CAMS with zero error 1-2 hours after issue for exactly that reason, so only the 25-48 h
+bucket is a reasonably fair comparison.
+
+> **Heads-up:** once this repo is on GitHub, the snapshot workflow commits a small file to
+> `main` twice a day. Disable it in the Actions tab if you don't want those commits.
 
 ## Limitations
 
@@ -168,7 +205,12 @@ snapshot issued after the training data ends, and writes `reports/provider_compa
   measures how well we forecast CAMS. Local station readings can differ a lot, especially in
   cities with strong local sources. Set `OPENAQ_API_KEY` to see the nearest station alongside.
 - **The comparison with the provider favours CAMS.** Its forecasts are scored against its own
-  later analysis.
+  stitched archive, so at short horizons the provider's forecast and the "actual" are the
+  same numbers.
+- **Long-horizon skill is optimistic.** Training weather comes from an archive of
+  short-range forecasts, sharper than what the app has 1-2 days ahead (see the ablation above).
+- **Evaluated on six months only** (late April to late October), which excludes the winter
+  smog season where the model matters most for South Asian cities.
 - **CAMS global is coarse.** It runs at about 45 km and every 3 hours (interpolated to hourly),
   so street-level and short spikes are smoothed out.
 - **Forecast AQI is PM2.5-only.** It can understate the AQI when ozone or another pollutant
