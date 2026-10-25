@@ -152,8 +152,9 @@ class DashboardService:
         with nothing cached; secondary failures become warnings."""
         if history_days not in range(1, 93):
             raise ValueError("history_days must be between 1 and 92")
-        # Fetch at least 7 days so 24h averages, NowCast and the 7-day anomaly scale warm up.
-        past_days = max(history_days, 7) + 1
+        # Always fetch at least 30 days: the 7- and 30-day views then share one cached
+        # response, and 24h averages, NowCast and the 7-day anomaly scale are warmed up.
+        past_days = max(history_days, 30) + 1
         data = self.provider.air_quality(
             location, past_days=past_days, forecast_days=FORECAST_HOURS // 24 + 1
         )
