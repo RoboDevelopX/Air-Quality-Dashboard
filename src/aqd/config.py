@@ -13,7 +13,8 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Literal
 
-AqiStandard = Literal["us_epa", "in_naqi"]
+from aqd.core.categories import AqiStandard
+
 LogFormat = Literal["json", "text"]
 
 _VALID_STANDARDS: tuple[AqiStandard, ...] = ("us_epa", "in_naqi")
