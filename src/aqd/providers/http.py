@@ -96,6 +96,10 @@ class HttpClient:
                 resp = self._client.get(url, params=dict(params), headers=dict(headers or {}))
             except httpx.TransportError as exc:
                 last_error = f"{type(exc).__name__}: {exc}"
+                log.warning(
+                    "http transport error",
+                    extra={"url": url, "attempt": attempt + 1, "error": last_error},
+                )
             else:
                 latency_ms = round((time.perf_counter() - started) * 1000)
                 log.info(
