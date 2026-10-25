@@ -14,9 +14,7 @@ dependencies = [
     "pandas>=2.2",
     "numpy>=1.26",
     "httpx>=0.27",
-    "scikit-learn>=1.5",
     "lightgbm>=4.5",
-    "joblib>=1.4",
 ]
 
 [project.optional-dependencies]
@@ -70,7 +68,7 @@ files = ["src/aqd", "scripts"]
 warn_unreachable = true
 
 [[tool.mypy.overrides]]
-module = ["plotly.*", "lightgbm.*", "statsmodels.*", "joblib.*", "sklearn.*", "streamlit.*"]
+module = ["plotly.*", "lightgbm.*", "statsmodels.*", "streamlit.*"]
 ignore_missing_imports = true
 
 [tool.pytest.ini_options]

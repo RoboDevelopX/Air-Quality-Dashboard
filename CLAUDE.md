@@ -27,7 +27,15 @@ pytest                                              # all tests (no network acce
 pytest --cov                                        # tests + coverage (fails under 80%)
 ruff check . && ruff format --check .               # lint + format check
 mypy                                                # type check (strict, src/aqd only)
-pre-commit run --all-files                          # everything CI runs, locally
+pre-commit run --all-files                          # everything CI runs (activate the venv first:
+                                                    # the mypy hook uses the venv's mypy)
+
+python scripts/train.py                             # fetch data, CV-evaluate, write models/ + reports/
+python scripts/train.py --cities Delhi London --folds 3 --no-sarimax   # quick run
+python scripts/snapshot_forecasts.py                # save the provider's current forecast to snapshots/
+python scripts/record_fixtures.py                   # re-record test fixtures from the live APIs
+
+docker build -t air-quality-dashboard . && docker run --rm -p 8501:8501 air-quality-dashboard
 ```
 
 ## Layout
@@ -37,14 +45,21 @@ app.py              Streamlit entry point; only calls aqd.ui.app.main()
 src/aqd/
   config.py         Settings dataclass from AQD_* env vars (+ optional .env)
   log.py            JSON structured logging
-  providers/        Data sources behind the Provider protocol (Open-Meteo, optional OpenAQ)
-  storage/          SQLite TTL cache
-  core/             Pure domain logic: AQI math, categories, health advice, anomalies, service
-  ml/               Features, baselines, models, time-series CV, evaluation, inference
-  ui/               Streamlit rendering only
-scripts/            Offline entry points (training, fixture recording)
-models/             Committed model artifact + metrics (regenerate with scripts/train.py)
-tests/unit|integration|fixtures
+  providers/        base.py (Provider/Geocoder/WeatherProvider protocols + Location),
+                    http.py (retries, cache, stale fallback), open_meteo.py (air quality,
+                    weather, geocoding), openaq.py (optional)
+  storage/          cache.py: SQLite TTL cache
+  core/             pollutants, aqi (breakpoint tables), averaging (NowCast), aqi_series,
+                    categories, health, anomaly, service (DashboardService -> view models)
+  ml/               features, cv, metrics, models (LightGBM + SARIMAX), evaluate, dataset,
+                    train (pipeline + provider comparison), inference
+  ui/               app.py (layout/state), components.py, charts.py (Plotly builders)
+scripts/            train.py, snapshot_forecasts.py, record_fixtures.py
+models/             Committed model artifact (LightGBM text + JSON); app runs without it
+reports/            metrics.json, results.md, plots written by scripts/train.py
+snapshots/          Provider forecast snapshots (written by the scheduled workflow)
+tests/              unit/, integration/ (pipeline e2e, Streamlit AppTest), fixtures/,
+                    fakes.py (in-memory providers), synthetic.py (synthetic series)
 ```
 
 ## Architecture rules
@@ -65,8 +80,11 @@ tests/unit|integration|fixtures
   local time only for display.
 - Concentrations are µg/m³ everywhere except inside `core/aqi.py`, which converts gases to
   ppb/ppm as each standard requires.
-- Tests never hit the network. Use recorded fixtures in `tests/fixtures/` with respx.
-  Record new ones with `scripts/record_fixtures.py`.
+- Tests never hit the network. Use recorded fixtures in `tests/fixtures/` with respx, or the
+  fakes in `tests/fakes.py`. Record new fixtures with `scripts/record_fixtures.py`.
+- UI tests use `streamlit.testing.v1.AppTest` and monkeypatch `aqd.ui.app.build_service`.
+- Don't add scikit-learn back without a use: metrics are a few lines, and CV needs a
+  target-time filter that `TimeSeriesSplit` can't express on stacked multi-horizon rows.
 - Secrets only via env vars (`OPENAQ_API_KEY`). Never log them; `Settings` hides them in repr.
 - One logical change per commit, imperative subject line ("Add NAQI breakpoint table").
 
@@ -76,4 +94,9 @@ Before changing provider code, re-read the official docs; do not rely on memory.
 - Open-Meteo Air Quality: https://open-meteo.com/en/docs/air-quality-api
 - Open-Meteo Geocoding: https://open-meteo.com/en/docs/geocoding-api
 - Open-Meteo Historical Forecast (weather): https://open-meteo.com/en/docs/historical-forecast-api
-- OpenAQ v3 (optional): https://docs.openaq.org/
+- OpenAQ v3 (optional): https://docs.openaq.org/ (header X-API-Key; 60/min, 2,000/h;
+  `coordinates=lat,lon`, radius <= 25,000 m)
+
+Open-Meteo free tier: non-commercial, < 10,000 calls/day, 5,000/h, 600/min; CC BY 4.0.
+Air-quality history is archived CAMS forecasts (not stations) and past forecasts are not
+archived, hence `scripts/snapshot_forecasts.py`.

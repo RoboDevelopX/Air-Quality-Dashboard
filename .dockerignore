@@ -1,0 +1,15 @@
+.git
+.venv
+venv
+.cache
+data
+snapshots
+reports
+tests
+scripts
+**/__pycache__
+**/*.egg-info
+.mypy_cache
+.pytest_cache
+.ruff_cache
+.env
