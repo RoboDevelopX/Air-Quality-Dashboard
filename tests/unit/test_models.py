@@ -189,3 +189,16 @@ def test_fetch_city_joins_weather() -> None:
     data = fetch_city(fake, fake, Location("X", 0, 0), date(2023, 1, 1), date(2023, 1, 3))
     assert list(data.hourly.columns) == ["pm2_5", "pm10", "wind_speed_10m"]
     assert data.hourly["wind_speed_10m"].isna().sum() == 24  # third day has no weather
+
+
+def test_fetch_city_blanks_pollutants_after_observed_until() -> None:
+    fake = _FakeHistory()
+    full = city_frame(days=3)
+    cutoff = full.index[30]
+    data = fetch_city(
+        fake, fake, Location("X", 0, 0), date(2023, 1, 1), date(2023, 1, 3), observed_until=cutoff
+    )
+    after = data.hourly.index > cutoff
+    assert data.hourly.loc[after, ["pm2_5", "pm10"]].isna().all().all()
+    assert data.hourly.loc[~after, "pm2_5"].notna().all()
+    assert data.hourly.loc[after, "wind_speed_10m"].notna().any()  # weather is kept

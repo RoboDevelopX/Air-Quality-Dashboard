@@ -8,7 +8,7 @@ Outputs:
     models/pm25_lgbm.txt, models/pm25_lgbm.json   model artifact loaded by the app
     reports/metrics.json, reports/results.md      CV metrics (baselines vs models)
     reports/*.png                                 evaluation plots
-    reports/provider_comparison.md                if forecast snapshots exist
+The comparison with the provider's own forecast is scripts/compare_provider.py.
 Raw data is cached under data/ (gitignored) so reruns don't refetch.
 """
 
@@ -24,8 +24,7 @@ import pandas as pd
 from aqd.config import Settings, load_dotenv
 from aqd.log import configure_logging
 from aqd.ml.dataset import DATA_START, TRAINING_CITIES, CityData, fetch_city
-from aqd.ml.evaluate import score_provider_rows
-from aqd.ml.train import TrainConfig, _markdown, provider_comparison, train_pipeline
+from aqd.ml.train import TrainConfig, train_pipeline
 from aqd.providers.http import HttpClient
 from aqd.providers.open_meteo import OpenMeteoAirQuality, OpenMeteoWeather
 from aqd.storage.cache import SqliteCache
@@ -87,31 +86,9 @@ def main() -> int:
         sarimax_every_days=10**6 if args.no_sarimax else 1,
         lgbm_rounds=args.rounds,
     )
-    report = train_pipeline(
-        cities, model_dir=args.model_dir, report_dir=args.report_dir, config=config
-    )
+    train_pipeline(cities, model_dir=args.model_dir, report_dir=args.report_dir, config=config)
     print((args.report_dir / "results.md").read_text())
 
-    snapshot_dir = ROOT / "snapshots"
-    files = sorted(snapshot_dir.glob("*.csv.gz"))
-    if files:
-        snapshots = pd.concat(pd.read_csv(f) for f in files)
-        rows = provider_comparison(
-            report.model, cities, snapshots, trained_until=pd.Timestamp(report.summary["data_end"])
-        )
-        if rows.empty:
-            log.info("no snapshots issued after the training window yet")
-        else:
-            table = score_provider_rows(rows)
-            text = (
-                "# Model vs provider (CAMS) forecasts\n\n"
-                f"{rows[['city', 'issued_at']].drop_duplicates().shape[0]} forecast issues, "
-                f"{len(rows)} hourly comparisons, all issued after the training data ends.\n\n"
-                + _markdown(table)
-                + "\n"
-            )
-            (args.report_dir / "provider_comparison.md").write_text(text)
-            print(text)
     return 0
 
 

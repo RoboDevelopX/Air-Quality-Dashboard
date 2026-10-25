@@ -43,8 +43,19 @@ def fetch_city(
     location: Location,
     start: date,
     end: date,
+    *,
+    observed_until: pd.Timestamp | None = None,
 ) -> CityData:
+    """Hourly pollutants joined with archived weather forecasts for one location.
+
+    A range that reaches today also returns CAMS forecast hours. Pass `observed_until`
+    (usually the current hour) to blank pollutant values after it, so forecasts are never
+    mistaken for actuals. Weather is kept: it plays the role of a forecast anyway.
+    """
     pollution = aq.air_quality_range(location, start, end)
+    if observed_until is not None:
+        pollution = pollution.copy()
+        pollution.loc[pollution.index > observed_until] = np.nan
     wx = weather.weather_range(location, start, end)
     hourly = pollution.join(wx, how="left")
     return CityData(location, hourly)
