@@ -13,7 +13,7 @@ from aqd.core.categories import STANDARD_NAMES, AqiStandard
 from aqd.core.pollutants import Pollutant
 from aqd.core.service import MAX_COMPARE, Dashboard, DashboardService
 from aqd.log import configure_logging
-from aqd.ml.inference import Forecaster
+from aqd.ml.inference import load_forecaster
 from aqd.providers.base import Location, Provider
 from aqd.providers.http import HttpClient, ProviderError
 from aqd.providers.open_meteo import OpenMeteoAirQuality, OpenMeteoGeocoder, OpenMeteoWeather
@@ -28,12 +28,7 @@ log = logging.getLogger(__name__)
 def build_service(settings: Settings) -> DashboardService:
     """One service (HTTP client, cache, model) per process, shared by all sessions."""
     http = HttpClient(SqliteCache(settings.cache_path), timeout_s=settings.http_timeout_s)
-    forecaster: Forecaster | None
-    try:
-        forecaster = Forecaster.load(settings.model_dir)
-    except FileNotFoundError:
-        log.warning("no model artifact found", extra={"model_dir": str(settings.model_dir)})
-        forecaster = None
+    forecaster = load_forecaster(settings.model_dir)
     extra: list[Provider] = []
     if settings.openaq_api_key:
         extra.append(OpenAQProvider(http, settings.openaq_api_key))

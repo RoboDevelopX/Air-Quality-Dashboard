@@ -69,7 +69,7 @@ def test_dashboard_without_model_or_weather() -> None:
     svc = DashboardService(FakeAirQuality(), FakeGeocoder())
     d = svc.dashboard(DELHI, "in_naqi")
     assert not d.forecast.model_available
-    assert "No trained model" in (d.forecast.message or "")
+    assert "model isn't available" in (d.forecast.message or "")
     assert d.forecast.frame["provider"].notna().any()
     assert d.forecast.frame["model_aqi"].isna().all()
     assert d.forecast.frame["provider_aqi"].notna().any()

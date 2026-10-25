@@ -1,3 +1,6 @@
+import logging
+import subprocess
+import sys
 from datetime import date
 from pathlib import Path
 
@@ -8,7 +11,7 @@ import pytest
 from aqd.ml.cv import make_folds
 from aqd.ml.dataset import CityData, fetch_city, stack
 from aqd.ml.evaluate import compare_with_provider, plot_error_by_horizon, plot_predictions, run_cv
-from aqd.ml.inference import Forecaster, ForecastUnavailableError
+from aqd.ml.inference import Forecaster, ForecastUnavailableError, load_forecaster
 from aqd.ml.metrics import mae
 from aqd.ml.models import META_FILE, LgbmForecaster, sarimax_forecast
 from aqd.providers.base import Location
@@ -101,6 +104,7 @@ def test_save_load_roundtrip_and_inference(
     np.testing.assert_allclose(loaded.predict(evaluation), model.predict(evaluation))
     assert loaded.intervals == model.intervals
     assert loaded.metadata["trained_at"] == "test"
+    assert load_forecaster(tmp_path) is not None
 
     hourly = cities["B"].hourly
     now = hourly.index[-100]
@@ -134,6 +138,27 @@ def test_load_errors(tmp_path: Path, frames: tuple[pd.DataFrame, pd.DataFrame]) 
     (tmp_path / META_FILE).write_text(meta)
     with pytest.raises(ValueError, match="features"):
         LgbmForecaster.load(tmp_path)
+
+
+def test_load_forecaster_falls_back_to_none(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, caplog: pytest.LogCaptureFixture
+) -> None:
+    assert load_forecaster(tmp_path) is None  # no artifact
+
+    def broken_native_library(directory: Path) -> LgbmForecaster:
+        raise OSError("Library not loaded: @rpath/libomp.dylib")
+
+    monkeypatch.setattr(LgbmForecaster, "load", broken_native_library)
+    with caplog.at_level(logging.WARNING):
+        assert load_forecaster(tmp_path) is None
+    assert "brew install libomp" in caplog.text
+
+
+def test_app_imports_do_not_load_lightgbm() -> None:
+    # The app must start (showing the CAMS forecast) even if LightGBM's native library is broken.
+    code = "import sys, aqd.ui.app; print('lightgbm' in sys.modules)"
+    out = subprocess.run([sys.executable, "-c", code], capture_output=True, text=True, check=True)
+    assert out.stdout.strip() == "False"
 
 
 def test_fit_rejects_empty() -> None:

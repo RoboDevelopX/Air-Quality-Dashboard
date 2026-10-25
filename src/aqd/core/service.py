@@ -242,7 +242,10 @@ class DashboardService:
         skill: dict[str, float] = {}
         coverage: float | None = None
         if self.forecaster is None:
-            message = "No trained model was found, so only the provider's forecast is shown."
+            message = (
+                "Our forecasting model isn't available (see the app log), so only the "
+                "provider's forecast is shown."
+            )
         else:
             summary: dict[str, Any] = self.forecaster.metadata.get("summary", {})
             cv = summary.get("cv", {})

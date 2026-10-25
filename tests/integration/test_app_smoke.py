@@ -104,7 +104,7 @@ def test_no_model_message(monkeypatch: pytest.MonkeyPatch) -> None:
     use(monkeypatch, DashboardService(FakeAirQuality(), FakeGeocoder()))
     at = run()
     assert not at.exception
-    assert "No trained model was found" in all_text(at)
+    assert "model isn't available" in all_text(at)
 
 
 def test_unknown_city(monkeypatch: pytest.MonkeyPatch) -> None:

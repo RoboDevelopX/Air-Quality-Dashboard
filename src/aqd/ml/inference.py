@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import logging
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
@@ -10,6 +11,8 @@ import pandas as pd
 
 from aqd.ml.features import MAX_HORIZON, build_frame
 from aqd.ml.models import LgbmForecaster
+
+log = logging.getLogger(__name__)
 
 MIN_HISTORY_HOURS = 72
 
@@ -75,3 +78,18 @@ class Forecaster:
             index=pd.DatetimeIndex(rows["valid_time"], name="time"),
         )
         return ModelForecast(origin=origin, frame=out, metadata=self.model.metadata)
+
+
+def load_forecaster(model_dir: Path) -> Forecaster | None:
+    """The saved model, or None if it can't be used; the app then shows CAMS's forecast only."""
+    try:
+        return Forecaster.load(model_dir)
+    except FileNotFoundError:
+        log.warning("no model artifact found", extra={"model_dir": str(model_dir)})
+    except (ImportError, OSError) as exc:
+        # LightGBM's native library didn't load. On macOS that means libomp is missing.
+        log.warning(
+            "LightGBM could not be loaded; on macOS run `brew install libomp`",
+            extra={"error": str(exc)},
+        )
+    return None

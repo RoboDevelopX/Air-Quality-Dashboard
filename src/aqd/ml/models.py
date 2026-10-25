@@ -11,13 +11,15 @@ import logging
 import warnings
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
-import lightgbm as lgb
 import numpy as np
 import pandas as pd
 
 from aqd.ml.features import MAX_HORIZON, feature_columns, invert_delta, target_delta
+
+if TYPE_CHECKING:
+    import lightgbm as lgb
 
 log = logging.getLogger(__name__)
 
@@ -60,6 +62,8 @@ class LgbmForecaster:
     ) -> LgbmForecaster:
         """Fit on a stacked frame. The last `early_stopping_frac` of origins (by time) is held
         out for early stopping, so the stopping point is never chosen on the future."""
+        import lightgbm as lgb
+
         data = frame.dropna(subset=["y", "pm_log_0"])
         if data.empty:
             raise ValueError("no training rows with a target")
@@ -131,6 +135,10 @@ class LgbmForecaster:
         if not model_path.is_file() or not meta_path.is_file():
             raise FileNotFoundError(f"no model artifact in {directory}")
         meta = json.loads(meta_path.read_text())
+        # Imported here, not at module level, so a broken native library (e.g. libomp missing
+        # on macOS) raises where the app can catch it instead of crashing every import.
+        import lightgbm as lgb
+
         booster = lgb.Booster(model_file=str(model_path))
         intervals = {int(h): (float(v[0]), float(v[1])) for h, v in meta.pop("intervals").items()}
         features = list(meta.pop("features"))
