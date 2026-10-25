@@ -26,7 +26,7 @@ streamlit run app.py                                # run the app (http://localh
 pytest                                              # all tests (no network access needed)
 pytest --cov                                        # tests + coverage (fails under 80%)
 ruff check . && ruff format --check .               # lint + format check
-mypy                                                # type check (strict, src/aqd only)
+mypy                                                # type check (strict, src/aqd + scripts)
 pre-commit run --all-files                          # everything CI runs (activate the venv first:
                                                     # the mypy hook uses the venv's mypy)
 
