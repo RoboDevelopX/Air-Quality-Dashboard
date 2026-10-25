@@ -33,6 +33,7 @@ pre-commit run --all-files                          # everything CI runs (activa
 python scripts/train.py                             # fetch data, CV-evaluate, write models/ + reports/
 python scripts/train.py --cities Delhi London --folds 3 --no-sarimax   # quick run
 python scripts/snapshot_forecasts.py                # save the provider's current forecast to snapshots/
+python scripts/compare_provider.py                  # score saved model vs CAMS snapshots (needs actuals)
 python scripts/record_fixtures.py                   # re-record test fixtures from the live APIs
 
 docker build -t air-quality-dashboard . && docker run --rm -p 8501:8501 air-quality-dashboard
@@ -54,7 +55,7 @@ src/aqd/
   ml/               features, cv, metrics, models (LightGBM + SARIMAX), evaluate, dataset,
                     train (pipeline + provider comparison), inference
   ui/               app.py (layout/state), components.py, charts.py (Plotly builders)
-scripts/            train.py, snapshot_forecasts.py, record_fixtures.py
+scripts/            train.py, snapshot_forecasts.py, compare_provider.py, record_fixtures.py
 models/             Committed model artifact (LightGBM text + JSON); app runs without it
 reports/            metrics.json, results.md, plots written by scripts/train.py
 snapshots/          Provider forecast snapshots (written by the scheduled workflow)
@@ -100,3 +101,16 @@ Before changing provider code, re-read the official docs; do not rely on memory.
 Open-Meteo free tier: non-commercial, < 10,000 calls/day, 5,000/h, 600/min; CC BY 4.0.
 Air-quality history is archived CAMS forecasts (not stations) and past forecasts are not
 archived, hence `scripts/snapshot_forecasts.py`.
+
+Checked against live responses on 2026-10-25 (the docs pages' source is also on GitHub at
+`open-meteo/open-meteo-website`, under `src/routes/en/docs/`):
+- Concentration units come back as `μg/m³` with the Greek mu (U+03BC); CO is µg/m³ too.
+- `domains=cams_global` is accepted; CAMS global history starts in August 2022.
+- Geocoding with no match returns `{"generationtime_ms": ...}` with no `results` key.
+- `boundary_layer_height` is valid on both weather APIs, but the historical-forecast archive
+  only has values from 2024-09-01 (null before). LightGBM treats them as missing.
+- An invalid variable gives HTTP 400 `{"error": true, "reason": "..."}`.
+- Under load the APIs sometimes drop TLS handshakes, return 429, or cut a body short;
+  `HttpClient` retries all three.
+- The archive is stitched from each run's first hours, so a saved CAMS forecast equals the
+  "actual" until the next run. Keep that in mind when comparing against the provider.
