@@ -73,6 +73,10 @@ tests/              unit/, integration/ (pipeline e2e, Streamlit AppTest), fixtu
 - **No look-ahead.** Every feature at forecast origin `t` uses data at or before `t` only;
   `tests/unit/test_features.py` enforces this. CV folds keep a gap of at least the max horizon.
 - **The app loads a saved model artifact**; it never trains. Training is `scripts/train.py`.
+- **The app must start without a usable model.** LightGBM is imported lazily in
+  `ml/models.py`, and `ml/inference.load_forecaster` returns None when the artifact is missing
+  or the native library won't load (macOS without `brew install libomp`). Don't add a
+  module-level `import lightgbm` anywhere the app imports; a test checks this.
 
 ## Conventions
 

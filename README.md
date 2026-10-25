@@ -75,7 +75,18 @@ pip install -e .                                       # app only
 streamlit run app.py                                   # opens http://localhost:8501
 ```
 
+**macOS:** LightGBM needs the OpenMP runtime, which macOS doesn't ship. Install it once with
+[Homebrew](https://brew.sh): `brew install libomp`. Without it the app still runs, but shows
+only the provider's forecast and logs a warning. On a Mac, `python` may not exist: use
+`python3` (3.11 or newer) to create the venv; inside the venv `python` works.
+
 For development (tests, linting, training): `pip install -e ".[dev]" && pre-commit install`.
+
+**Troubleshooting**
+- *`Library not loaded: @rpath/libomp.dylib`* (macOS): `brew install libomp`, then restart
+  Streamlit.
+- *Port 8501 already in use*: `streamlit run app.py --server.port 8502`.
+- *"City search is unavailable"*: the app can't reach Open-Meteo. Check the connection or VPN.
 
 With Docker:
 
