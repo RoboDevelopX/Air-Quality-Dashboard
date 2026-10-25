@@ -165,6 +165,7 @@ def plot_predictions(result: CvResult, city: str, horizon: int, path: Path) -> N
     import matplotlib
 
     matplotlib.use("Agg")
+    import matplotlib.dates as mdates
     import matplotlib.pyplot as plt
 
     p = result.predictions
@@ -178,6 +179,9 @@ def plot_predictions(result: CvResult, city: str, horizon: int, path: Path) -> N
         ax.fill_between(
             p["valid_time"], p["lgbm_lo"], p["lgbm_hi"], alpha=0.2, label="80% interval"
         )
+    locator = mdates.AutoDateLocator()  # type: ignore[no-untyped-call]
+    ax.xaxis.set_major_locator(locator)
+    ax.xaxis.set_major_formatter(mdates.ConciseDateFormatter(locator))  # type: ignore[no-untyped-call]
     ax.set_ylabel("PM2.5 (µg/m³)")
     ax.set_title(f"{city}: {horizon}h-ahead forecasts on held-out data")
     ax.legend(loc="upper left", ncols=4, fontsize=8)
