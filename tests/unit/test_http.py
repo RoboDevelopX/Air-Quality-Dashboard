@@ -87,10 +87,19 @@ def test_stale_cache_fallback_on_failure(tmp_path: Path, clock: FakeClock) -> No
 
 
 @respx.mock
-def test_invalid_json_raises(tmp_path: Path, clock: FakeClock) -> None:
-    respx.get(URL).mock(return_value=httpx.Response(200, text="<html>"))
+def test_invalid_json_raises_after_retries(tmp_path: Path, clock: FakeClock) -> None:
+    route = respx.get(URL).mock(return_value=httpx.Response(200, text="<html>"))
     with pytest.raises(ProviderError, match="invalid JSON"):
         client(tmp_path, clock).get_json(URL, {}, ttl_s=60)
+    assert route.call_count == 3
+
+
+@respx.mock
+def test_invalid_json_is_retried(tmp_path: Path, clock: FakeClock) -> None:
+    respx.get(URL).mock(
+        side_effect=[httpx.Response(200, text='{"cut'), httpx.Response(200, json={"ok": 1})]
+    )
+    assert client(tmp_path, clock).get_json(URL, {}, ttl_s=60).data == {"ok": 1}
 
 
 @respx.mock

@@ -109,11 +109,14 @@ class HttpClient:
                 if resp.status_code == 200:
                     try:
                         return resp.json(), resp.text
-                    except ValueError as exc:
-                        raise ProviderError(f"invalid JSON from {url}") from exc
-                last_error = f"HTTP {resp.status_code}: {_reason(resp)}"
-                if resp.status_code not in RETRY_STATUS:
-                    raise ProviderError(last_error)
+                    except ValueError:
+                        # Seen live as a cut-off body under load; a retry usually succeeds.
+                        last_error = f"invalid JSON from {url}"
+                        log.warning("http invalid json", extra={"url": url, "attempt": attempt + 1})
+                else:
+                    last_error = f"HTTP {resp.status_code}: {_reason(resp)}"
+                    if resp.status_code not in RETRY_STATUS:
+                        raise ProviderError(last_error)
             if attempt < self._retries:
                 self._sleep(self._backoff_s * 2**attempt)
         raise ProviderError(
